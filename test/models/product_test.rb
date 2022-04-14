@@ -28,11 +28,11 @@ class ProductTest < ActiveSupport::TestCase
     
     product.price = -1
     assert product.invalid?
-    assert_equal ["must be greater than or equal to 0.01"], product.errors[:price]
+    assert_equal ["Can't be less than a cent"], product.errors[:price]
 
     product.price = 0
     assert product.invalid?
-    assert_equal ["must be greater than or equal to 0.01"], product.errors[:price]
+    assert_equal ["Can't be less than a cent"], product.errors[:price]
 
     product.price = 1
     assert product.valid?
@@ -62,4 +62,15 @@ class ProductTest < ActiveSupport::TestCase
     assert product.invalid?
     assert_equal [I18n.translate('errors.messages.taken')], product.errors[:title]
   end
+  
+  test "product title must be at least" do
+    product = Product.new(title: 'Book',
+                          description: 'yyy',
+                          price: 1,
+                          image_url: "fred.gif")
+
+    assert product.invalid?
+    assert_equal ["Must be atleast 10 characters"], product.errors[:title]
+  end
+
 end
